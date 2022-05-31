@@ -5354,6 +5354,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "SelectOption",
   data: function data() {
@@ -27992,196 +27994,183 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "bg-white" }, [
-    _c(
-      "div",
-      {
-        staticClass:
-          "flex flex-col space-y-8 overflow-y-scroll container pb-4 mb-40 mt-16",
-      },
-      [
-        _c("div", { staticClass: "flex mx-4 mt-4" }, [
-          _c("img", {
-            staticClass: "rounded-md w-32 h-32 md:w-52 md:h-52",
-            attrs: {
-              src: "https://orderhk.pokeguide.com/storage/img/goods/4/9332010275ffe76d5bdb046.02877134.jpeg",
-            },
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "flex-grow" }, [
-            _c("div", { staticClass: "flex-col pl-4" }, [
-              _c(
-                "div",
-                { staticClass: "flex-grow text-2xl md:text-4xl mx-4 mt-4" },
-                [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(_vm.product.product_name) +
-                      "\n                    "
-                  ),
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "text-3xl md:text-5xl  mt-5 float-end text-yellow-500",
-                },
-                [
-                  _vm._v(
-                    "\n                        HK$26.00\n                    "
-                  ),
-                ]
-              ),
-            ]),
-          ]),
-        ]),
-        _vm._v(" "),
-        _vm._m(0),
-        _vm._v(" "),
-        _vm._m(1),
-        _vm._v(" "),
-        _vm._m(2),
-        _vm._v(" "),
-        _vm._m(3),
-      ]
-    ),
-  ])
+  return _vm._m(0)
 }
 var staticRenderFns = [
   function () {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "flex mx-4" }, [
-      _c("div", { staticClass: "text-2xl" }, [
-        _vm._v("\n                Quantity\n            "),
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "flex-grow " }, [
-        _c("div", { staticClass: "flex space-x-6 float-end align-middle" }, [
-          _c("div", { staticClass: "text-2xl hover:cursor-pointer" }, [
-            _vm._v("-"),
+    return _c("div", { staticClass: "bg-white" }, [
+      _c(
+        "div",
+        {
+          staticClass:
+            "flex flex-col space-y-8 overflow-y-scroll container pb-4 mb-40 mt-16",
+        },
+        [
+          _c("div", { staticClass: "flex mx-4 mt-4" }, [
+            _c("img", {
+              staticClass: "rounded-md w-32 h-32 md:w-52 md:h-52",
+              attrs: {
+                src: "https://orderhk.pokeguide.com/storage/img/goods/4/9332010275ffe76d5bdb046.02877134.jpeg",
+              },
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex-grow" }, [
+              _c("div", { staticClass: "flex-col pl-4" }, [
+                _c(
+                  "div",
+                  { staticClass: "flex-grow text-2xl md:text-4xl mx-4 mt-4" },
+                  [
+                    _vm._v(
+                      "\n                            mask\n                        "
+                    ),
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "text-3xl md:text-5xl  mt-5 float-end text-yellow-500",
+                  },
+                  [
+                    _vm._v(
+                      "\n                            HK$26.00\n\n                        "
+                    ),
+                  ]
+                ),
+              ]),
+            ]),
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "text-2xl " }, [_vm._v("1")]),
+          _c("div", { staticClass: "flex mx-4" }, [
+            _c("div", { staticClass: "text-2xl" }, [
+              _vm._v("\n                    Quantity\n                "),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex-grow " }, [
+              _c(
+                "div",
+                { staticClass: "flex space-x-6 float-end align-middle" },
+                [
+                  _c("div", { staticClass: "text-2xl hover:cursor-pointer" }, [
+                    _vm._v("-"),
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "text-2xl " }, [_vm._v("1")]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "text-2xl hover:cursor-pointer text-yellow-500",
+                    },
+                    [_vm._v("+")]
+                  ),
+                ]
+              ),
+            ]),
+          ]),
           _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "text-2xl hover:cursor-pointer text-yellow-500" },
-            [_vm._v("+")]
-          ),
-        ]),
-      ]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "flex flex-col mx-4" }, [
-      _c("div", { staticClass: "text-2xl" }, [
-        _vm._v("\n                Size\n            "),
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "flex-wrap mt-3" }, [
-        _c(
-          "span",
-          {
-            staticClass:
-              "px-4 py-2 mr-2 rounded-full text-gray-500 bg-gray-200 font-semibold text-sm align-center w-max cursor-pointer transition duration-300 ease whitespace-nowrap\t",
-          },
-          [_vm._v("\n             large")]
-        ),
-        _vm._v(" "),
-        _c(
-          "span",
-          {
-            staticClass:
-              "px-4 py-2 rounded-full text-yellow-500 bg-amber-100 font-semibold text-sm text-center w-max cursor-pointer transition duration-300 ease whitespace-nowrap\t",
-          },
-          [_vm._v("\n             small")]
-        ),
-      ]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "flex flex-col mx-4" }, [
-      _c("div", { staticClass: "text-2xl" }, [
-        _vm._v("\n                Color\n            "),
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "flex flex-wrap mt-3" }, [
-        _c(
-          "span",
-          {
-            staticClass:
-              "px-4 py-2 my-2 mr-2 rounded-full text-gray-500 bg-gray-200 font-semibold text-sm align-center w-max cursor-pointer transition duration-300 ease whitespace-nowrap\t",
-          },
-          [_vm._v("\n             Black black Black black")]
-        ),
-        _vm._v(" "),
-        _c(
-          "span",
-          {
-            staticClass:
-              "px-4 py-2 my-2 mr-2 rounded-full text-yellow-500 bg-amber-100 font-semibold text-sm text-center w-max cursor-pointer transition duration-300 ease whitespace-nowrap\t",
-          },
-          [_vm._v("\n             yellow yellow yellow yellow")]
-        ),
-        _vm._v(" "),
-        _c(
-          "span",
-          {
-            staticClass:
-              "px-4 py-2 my-2 mr-2 rounded-full text-decoration-line-through text-gray-500 bg-gray-200 font-semibold text-sm text-center w-max cursor-pointer transition duration-300 ease whitespace-nowrap\t",
-          },
-          [_vm._v("\n             white white white white")]
-        ),
-      ]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "flex flex-col mx-4" }, [
-      _c("div", { staticClass: "text-2xl" }, [
-        _vm._v("\n                Origin\n            "),
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "flex-wrap mt-3" }, [
-        _c(
-          "span",
-          {
-            staticClass:
-              "px-4 py-2 rounded-full mr-2 text-gray-500 bg-gray-200 font-semibold text-sm w-max cursor-pointer transition duration-300 ease whitespace-nowrap\t",
-          },
-          [_vm._v("\n             HK")]
-        ),
-        _vm._v(" "),
-        _c(
-          "span",
-          {
-            staticClass:
-              "px-4 py-2 rounded-full mr-2 text-yellow-500 bg-amber-100 font-semibold text-sm w-max cursor-pointer transition duration-300 ease whitespace-nowrap",
-          },
-          [_vm._v("\n             vietnam")]
-        ),
-        _vm._v(" "),
-        _c(
-          "span",
-          {
-            staticClass:
-              "px-4 py-2 rounded-full mr-2 text-decoration-line-through text-gray-500 bg-gray-200 font-semibold text-sm text-center w-max cursor-pointer transition duration-300 ease whitespace-nowrap\t",
-          },
-          [_vm._v("\n             Taiwan")]
-        ),
-      ]),
+          _c("div", { staticClass: "flex flex-col mx-4" }, [
+            _c("div", { staticClass: "text-2xl" }, [
+              _vm._v("\n                    Size\n                "),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex-wrap mt-3" }, [
+              _c(
+                "span",
+                {
+                  staticClass:
+                    "px-4 py-2 mr-2 rounded-full text-gray-500 bg-gray-200 font-semibold text-sm align-center w-max cursor-pointer transition duration-300 ease whitespace-nowrap\t",
+                },
+                [_vm._v("\n                 large")]
+              ),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass:
+                    "px-4 py-2 rounded-full text-yellow-500 bg-amber-100 font-semibold text-sm text-center w-max cursor-pointer transition duration-300 ease whitespace-nowrap\t",
+                },
+                [_vm._v("\n                 small")]
+              ),
+            ]),
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex flex-col mx-4" }, [
+            _c("div", { staticClass: "text-2xl" }, [
+              _vm._v("\n                    Color\n                "),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex flex-wrap mt-3" }, [
+              _c(
+                "span",
+                {
+                  staticClass:
+                    "px-4 py-2 my-2 mr-2 rounded-full text-gray-500 bg-gray-200 font-semibold text-sm align-center w-max cursor-pointer transition duration-300 ease whitespace-nowrap\t",
+                },
+                [_vm._v("\n                 Black black Black black")]
+              ),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass:
+                    "px-4 py-2 my-2 mr-2 rounded-full text-yellow-500 bg-amber-100 font-semibold text-sm text-center w-max cursor-pointer transition duration-300 ease whitespace-nowrap\t",
+                },
+                [_vm._v("\n                 yellow yellow yellow yellow")]
+              ),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass:
+                    "px-4 py-2 my-2 mr-2 rounded-full text-decoration-line-through text-gray-500 bg-gray-200 font-semibold text-sm text-center w-max cursor-pointer transition duration-300 ease whitespace-nowrap\t",
+                },
+                [_vm._v("\n                 white white white white")]
+              ),
+            ]),
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex flex-col mx-4" }, [
+            _c("div", { staticClass: "text-2xl" }, [
+              _vm._v("\n                    Origin\n                "),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex-wrap mt-3" }, [
+              _c(
+                "span",
+                {
+                  staticClass:
+                    "px-4 py-2 rounded-full mr-2 text-gray-500 bg-gray-200 font-semibold text-sm w-max cursor-pointer transition duration-300 ease whitespace-nowrap\t",
+                },
+                [_vm._v("\n                 HK")]
+              ),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass:
+                    "px-4 py-2 rounded-full mr-2 text-yellow-500 bg-amber-100 font-semibold text-sm w-max cursor-pointer transition duration-300 ease whitespace-nowrap",
+                },
+                [_vm._v("\n                 vietnam")]
+              ),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass:
+                    "px-4 py-2 rounded-full mr-2 text-decoration-line-through text-gray-500 bg-gray-200 font-semibold text-sm text-center w-max cursor-pointer transition duration-300 ease whitespace-nowrap\t",
+                },
+                [_vm._v("\n                 Taiwan")]
+              ),
+            ]),
+          ]),
+        ]
+      ),
     ])
   },
 ]

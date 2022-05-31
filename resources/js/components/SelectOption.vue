@@ -7,10 +7,12 @@
                 <div class="flex-grow">
                     <div class="flex-col pl-4">
                         <div class="flex-grow text-2xl md:text-4xl mx-4 mt-4">
-                            {{ product.product_name }}
+<!--                            {{ product.product_name }}-->
+                            mask
                         </div>
                         <div class="text-3xl md:text-5xl  mt-5 float-end text-yellow-500">
                             HK$26.00
+
                         </div>
                     </div>
                 </div>
@@ -95,15 +97,13 @@ export default {
         }
     },
 
-    mounted()
-    {
+    mounted() {
         axios.post('/api/fetch').then
         (
             axios.get('/api/product').then(response => {
                 this.product = response.data;
             })
         )
-
     }
 }
 
