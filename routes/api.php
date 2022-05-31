@@ -21,4 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/fetch', productFetchController::class);
-Route::get('/product', 'App\Http\Controllers\productController@index');
+Route::get('/product', 'App\Http\Controllers\productController@getProduct');
+Route::get('/product_sku', 'App\Http\Controllers\productController@getProductSku');
+Route::get('/product_options', 'App\Http\Controllers\productController@getProductOptions');

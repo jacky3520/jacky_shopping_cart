@@ -27,7 +27,7 @@ class productFetchController extends Controller
 //        dd($product_info);
 
         $product->product_name = $product_info->goods_name;
-        $product->product_options = json_encode($product_info->options);
+        $product->product_options = json_encode($product_info->options, true);
         $product->min_price = $product_info->min_price;
         $product->max_price = $product_info->max_price;
 
