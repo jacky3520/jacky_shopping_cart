@@ -1,64 +1,76 @@
 <template>
-    <div class="bg-white">
+    <div>
+        <div class="bg-white">
 
-        <div class="flex flex-col space-y-8 overflow-y-scroll container pb-4 mb-40 mt-16">
-            <div class="flex mx-4 mt-4">
-                <img v-bind:src="img"
-                     class="rounded-md w-32 h-32 md:w-52 md:h-52">
-                <div class="flex-grow">
-                    <div class="flex-col pl-4">
-                        <div class="flex-grow text-2xl md:text-4xl mx-4 mt-4">
-                            {{ product.product_name }}
-                        </div>
-
-                        <div class="text-3xl md:text-5xl  mt-5 float-end text-yellow-500">
-
-                            <div v-if="price == null">
-                                HK${{ min_price }} ~
-                                HK${{ max_price }}
+            <div class="flex flex-col space-y-8 overflow-y-scroll container pb-4 mb-40 mt-16">
+                <div class="flex mx-4 mt-4">
+                    <img v-bind:src="img"
+                         class="rounded-md w-32 h-32 md:w-52 md:h-52">
+                    <div class="flex-grow">
+                        <div class="flex-col pl-4">
+                            <div class="flex-grow text-2xl md:text-4xl mx-4 mt-4">
+                                {{ product.product_name }}
                             </div>
 
-                            <div v-else>
-                                HK${{ price }}
-                            </div>
+                            <div class="text-3xl md:text-5xl  mt-5 float-end text-yellow-500">
 
+                                <div v-if="price == null">
+                                    HK${{ min_price }} ~
+                                    HK${{ max_price }}
+                                </div>
+
+                                <div v-else>
+                                    HK${{ price }}
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="flex mx-4">
-                <div class="text-2xl">
-                    Quantity
-                </div>
-                <div class="flex-grow ">
-                    <div class="flex space-x-6 float-end align-middle">
-                        <div class="text-2xl hover:cursor-pointer" @click="qty = changeQty(0, qty)">-</div>
-                        <div class="text-2xl ">{{ qty }}</div>
-                        <div class="text-2xl hover:cursor-pointer text-yellow-500" @click="qty = changeQty(1, qty)">+
+                <div class="flex mx-4">
+                    <div class="text-2xl">
+                        Quantity
+                    </div>
+                    <div class="flex-grow ">
+                        <div class="flex space-x-6 float-end align-middle">
+                            <div class="text-2xl hover:cursor-pointer" @click="qty = changeQty(0, qty)">-</div>
+                            <div class="text-2xl ">{{ qty }}</div>
+                            <div class="text-2xl hover:cursor-pointer text-yellow-500" @click="qty = changeQty(1, qty)">+
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="flex flex-col mx-4" v-for="(category, catIndex) in product_options">
-                <div class="text-2xl">
-                    {{ category.option_name }}
+                <div class="flex flex-col mx-4" v-for="(category, catIndex) in product_options">
+                    <div class="text-2xl">
+                        {{ category.option_name }}
+                    </div>
+                    <div class="flex flex-wrap mt-3">
+
+                        <button v-for="(values, valIndex) in category.option_values"
+                                v-bind:key="values.option_value_id"
+                                v-on:click="[clickedOption(catIndex, valIndex)]"
+                                :ref="'optionButton' + values.option_value_id"
+                                :disabled='getAvailable(catIndex, valIndex)'
+                                :class="buttonStyle(values.clicked, values.available)">
+
+                            {{ values.option_value_name }}
+
+                        </button>
+
+                        <!--                    @click="checkAvailable(category.option_id, values.option_value_id)"-->
+                    </div>
                 </div>
-                <div class="flex flex-wrap mt-3">
-
-                    <button v-for="(values, valIndex) in category.option_values"
-                            v-bind:key="values.option_value_id"
-                            v-on:click="[clickedOption(catIndex, valIndex)]"
-                            :ref="'optionButton' + values.option_value_id"
-                            :disabled='getAvailable(catIndex, valIndex)'
-                            :class="buttonStyle(values.clicked, values.available)">
-
-                        {{ values.option_value_name }} - {{ values.option_value_id }} - {{ values.available }}
-
-                    </button>
-
-                    <!--                    @click="checkAvailable(category.option_id, values.option_value_id)"-->
+            </div>
+        </div>
+        <div class="fixed-bottom bg-white p-4">
+            <div :class="checkOutButtonStyle()">
+                <div class="w-full text-center py-3 text-white text-2xl font-semibold transition duration-300" v-if="stock">
+                    Checkout
+                </div>
+                <div class="w-full text-center py-3 text-white text-2xl font-semibold transition duration-300" v-else>
+                    Out of Stock
                 </div>
             </div>
         </div>
@@ -120,6 +132,13 @@ export default {
     },
 
     methods: {
+
+        checkOutButtonStyle(){
+            return {
+                'flex bg-yellow-500 rounded-md hover:cursor-pointer': this.stock,
+                'flex bg-gray-200 rounded-md hover:cursor-pointer': !this.stock,
+            }
+        },
 
 
         buttonStyle(clicked, available) {
@@ -269,9 +288,11 @@ export default {
                         this.min_price = this.product.min_price * this.qty;
                         this.max_price = this.product.max_price * this.qty;
                         this.price = null;
+                        this.stock = true;
                     }
 
                 }
+
 
                 score = 0;
             })

@@ -5333,6 +5333,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "SelectOption",
   props: ['product', 'product_sku'],
@@ -5380,6 +5392,12 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   methods: {
+    checkOutButtonStyle: function checkOutButtonStyle() {
+      return {
+        'flex bg-yellow-500 rounded-md hover:cursor-pointer': this.stock,
+        'flex bg-gray-200 rounded-md hover:cursor-pointer': !this.stock
+      };
+    },
     buttonStyle: function buttonStyle(clicked, available) {
       return {
         'px-4 py-2 my-2 mr-2 rounded-full decoration-2 line-through text-gray-400 bg-gray-200 font-semibold text-sm align-center w-max cursor-pointer transition duration-200 ease whitespace-nowrap': !available,
@@ -5498,6 +5516,7 @@ __webpack_require__.r(__webpack_exports__);
             _this4.min_price = _this4.product.min_price * _this4.qty;
             _this4.max_price = _this4.product.max_price * _this4.qty;
             _this4.price = null;
+            _this4.stock = true;
           }
         }
 
@@ -28132,157 +28151,177 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "bg-white" }, [
-    _c(
-      "div",
-      {
-        staticClass:
-          "flex flex-col space-y-8 overflow-y-scroll container pb-4 mb-40 mt-16",
-      },
-      [
-        _c("div", { staticClass: "flex mx-4 mt-4" }, [
-          _c("img", {
-            staticClass: "rounded-md w-32 h-32 md:w-52 md:h-52",
-            attrs: { src: _vm.img },
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "flex-grow" }, [
-            _c("div", { staticClass: "flex-col pl-4" }, [
-              _c(
-                "div",
-                { staticClass: "flex-grow text-2xl md:text-4xl mx-4 mt-4" },
-                [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(_vm.product.product_name) +
-                      "\n                    "
-                  ),
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "text-3xl md:text-5xl  mt-5 float-end text-yellow-500",
-                },
-                [
-                  _vm.price == null
-                    ? _c("div", [
-                        _vm._v(
-                          "\n                            HK$" +
-                            _vm._s(_vm.min_price) +
-                            " ~\n                            HK$" +
-                            _vm._s(_vm.max_price) +
-                            "\n                        "
-                        ),
-                      ])
-                    : _c("div", [
-                        _vm._v(
-                          "\n                            HK$" +
-                            _vm._s(_vm.price) +
-                            "\n                        "
-                        ),
-                      ]),
-                ]
-              ),
-            ]),
-          ]),
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "flex mx-4" }, [
-          _c("div", { staticClass: "text-2xl" }, [
-            _vm._v("\n                Quantity\n            "),
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "flex-grow " }, [
-            _c(
-              "div",
-              { staticClass: "flex space-x-6 float-end align-middle" },
-              [
+  return _c("div", [
+    _c("div", { staticClass: "bg-white" }, [
+      _c(
+        "div",
+        {
+          staticClass:
+            "flex flex-col space-y-8 overflow-y-scroll container pb-4 mb-40 mt-16",
+        },
+        [
+          _c("div", { staticClass: "flex mx-4 mt-4" }, [
+            _c("img", {
+              staticClass: "rounded-md w-32 h-32 md:w-52 md:h-52",
+              attrs: { src: _vm.img },
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex-grow" }, [
+              _c("div", { staticClass: "flex-col pl-4" }, [
                 _c(
                   "div",
-                  {
-                    staticClass: "text-2xl hover:cursor-pointer",
-                    on: {
-                      click: function ($event) {
-                        _vm.qty = _vm.changeQty(0, _vm.qty)
-                      },
-                    },
-                  },
-                  [_vm._v("-")]
+                  { staticClass: "flex-grow text-2xl md:text-4xl mx-4 mt-4" },
+                  [
+                    _vm._v(
+                      "\n                            " +
+                        _vm._s(_vm.product.product_name) +
+                        "\n                        "
+                    ),
+                  ]
                 ),
-                _vm._v(" "),
-                _c("div", { staticClass: "text-2xl " }, [
-                  _vm._v(_vm._s(_vm.qty)),
-                ]),
                 _vm._v(" "),
                 _c(
                   "div",
                   {
                     staticClass:
-                      "text-2xl hover:cursor-pointer text-yellow-500",
-                    on: {
-                      click: function ($event) {
-                        _vm.qty = _vm.changeQty(1, _vm.qty)
-                      },
-                    },
-                  },
-                  [_vm._v("+\n                    ")]
-                ),
-              ]
-            ),
-          ]),
-        ]),
-        _vm._v(" "),
-        _vm._l(_vm.product_options, function (category, catIndex) {
-          return _c("div", { staticClass: "flex flex-col mx-4" }, [
-            _c("div", { staticClass: "text-2xl" }, [
-              _vm._v(
-                "\n                " +
-                  _vm._s(category.option_name) +
-                  "\n            "
-              ),
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "flex flex-wrap mt-3" },
-              _vm._l(category.option_values, function (values, valIndex) {
-                return _c(
-                  "button",
-                  {
-                    key: values.option_value_id,
-                    ref: "optionButton" + values.option_value_id,
-                    refInFor: true,
-                    class: _vm.buttonStyle(values.clicked, values.available),
-                    attrs: { disabled: _vm.getAvailable(catIndex, valIndex) },
-                    on: {
-                      click: function ($event) {
-                        ;[_vm.clickedOption(catIndex, valIndex)]
-                      },
-                    },
+                      "text-3xl md:text-5xl  mt-5 float-end text-yellow-500",
                   },
                   [
-                    _vm._v(
-                      "\n\n                    " +
-                        _vm._s(values.option_value_name) +
-                        " - " +
-                        _vm._s(values.option_value_id) +
-                        " - " +
-                        _vm._s(values.available) +
-                        "\n\n                "
-                    ),
+                    _vm.price == null
+                      ? _c("div", [
+                          _vm._v(
+                            "\n                                HK$" +
+                              _vm._s(_vm.min_price) +
+                              " ~\n                                HK$" +
+                              _vm._s(_vm.max_price) +
+                              "\n                            "
+                          ),
+                        ])
+                      : _c("div", [
+                          _vm._v(
+                            "\n                                HK$" +
+                              _vm._s(_vm.price) +
+                              "\n                            "
+                          ),
+                        ]),
                   ]
-                )
-              }),
-              0
+                ),
+              ]),
+            ]),
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex mx-4" }, [
+            _c("div", { staticClass: "text-2xl" }, [
+              _vm._v("\n                    Quantity\n                "),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex-grow " }, [
+              _c(
+                "div",
+                { staticClass: "flex space-x-6 float-end align-middle" },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "text-2xl hover:cursor-pointer",
+                      on: {
+                        click: function ($event) {
+                          _vm.qty = _vm.changeQty(0, _vm.qty)
+                        },
+                      },
+                    },
+                    [_vm._v("-")]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "text-2xl " }, [
+                    _vm._v(_vm._s(_vm.qty)),
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "text-2xl hover:cursor-pointer text-yellow-500",
+                      on: {
+                        click: function ($event) {
+                          _vm.qty = _vm.changeQty(1, _vm.qty)
+                        },
+                      },
+                    },
+                    [_vm._v("+\n                        ")]
+                  ),
+                ]
+              ),
+            ]),
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.product_options, function (category, catIndex) {
+            return _c("div", { staticClass: "flex flex-col mx-4" }, [
+              _c("div", { staticClass: "text-2xl" }, [
+                _vm._v(
+                  "\n                    " +
+                    _vm._s(category.option_name) +
+                    "\n                "
+                ),
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "flex flex-wrap mt-3" },
+                _vm._l(category.option_values, function (values, valIndex) {
+                  return _c(
+                    "button",
+                    {
+                      key: values.option_value_id,
+                      ref: "optionButton" + values.option_value_id,
+                      refInFor: true,
+                      class: _vm.buttonStyle(values.clicked, values.available),
+                      attrs: { disabled: _vm.getAvailable(catIndex, valIndex) },
+                      on: {
+                        click: function ($event) {
+                          ;[_vm.clickedOption(catIndex, valIndex)]
+                        },
+                      },
+                    },
+                    [
+                      _vm._v(
+                        "\n\n                        " +
+                          _vm._s(values.option_value_name) +
+                          "\n\n                    "
+                      ),
+                    ]
+                  )
+                }),
+                0
+              ),
+            ])
+          }),
+        ],
+        2
+      ),
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "fixed-bottom bg-white p-4" }, [
+      _c("div", { class: _vm.checkOutButtonStyle() }, [
+        _vm.stock
+          ? _c(
+              "div",
+              {
+                staticClass:
+                  "w-full text-center py-3 text-white text-2xl font-semibold transition duration-300",
+              },
+              [_vm._v("\n                Checkout\n            ")]
+            )
+          : _c(
+              "div",
+              {
+                staticClass:
+                  "w-full text-center py-3 text-white text-2xl font-semibold transition duration-300",
+              },
+              [_vm._v("\n                Out of Stock\n            ")]
             ),
-          ])
-        }),
-      ],
-      2
-    ),
+      ]),
+    ]),
   ])
 }
 var staticRenderFns = []

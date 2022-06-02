@@ -21,11 +21,7 @@
     <select-option></select-option>
 </div>
 
-<div class="fixed-bottom bg-white p-4">
-    <div class="flex bg-yellow-500 rounded-md hover:cursor-pointer">
-        <div class="w-full text-center py-3 text-white text-2xl font-semibold transition duration-300">Checkout</div>
-    </div>
-</div>
+
 
 </body>
 
