@@ -3,16 +3,24 @@
 
         <div class="flex flex-col space-y-8 overflow-y-scroll container pb-4 mb-40 mt-16">
             <div class="flex mx-4 mt-4">
-                <img src=""
+                <img v-bind:src="img"
                      class="rounded-md w-32 h-32 md:w-52 md:h-52">
                 <div class="flex-grow">
                     <div class="flex-col pl-4">
                         <div class="flex-grow text-2xl md:text-4xl mx-4 mt-4">
                             {{ product.product_name }}
                         </div>
+
                         <div class="text-3xl md:text-5xl  mt-5 float-end text-yellow-500">
-                            HK${{ min_price }} ~
-                            HK${{ max_price }}
+
+                            <div v-if="price == null">
+                                HK${{ min_price }} ~
+                                HK${{ max_price }}
+                            </div>
+
+                            <div v-else>
+                                HK${{ price }}
+                            </div>
 
                         </div>
                     </div>
@@ -43,9 +51,10 @@
                             v-bind:key="values.option_value_id"
                             v-on:click="[clickedOption(catIndex, valIndex)]"
                             :ref="'optionButton' + values.option_value_id"
+                            :disabled='getAvailable(catIndex, valIndex)'
                             :class="buttonStyle(values.clicked, values.available)">
 
-                        {{ values.option_value_name }} - {{ values.option_value_id }}
+                        {{ values.option_value_name }} - {{ values.option_value_id }} - {{ values.available }}
 
                     </button>
 
@@ -72,7 +81,12 @@ export default {
             product_options: [],
             qty: 1,
             mapping: [],
-            clickedOptions: []
+            clickedOptions: [],
+            selectedCategory: null,
+            price: null,
+            price_per_qty: null,
+            img: null,
+            stock: true,
         }
     },
 
@@ -86,6 +100,7 @@ export default {
             }),
             axios.get('/api/product_sku').then(response => {
                 this.product_sku = response.data;
+                this.img = this.product_sku[0].sku_img;
                 this.createMap();
             }),
             axios.get('/api/product_options').then(response => {
@@ -106,6 +121,7 @@ export default {
 
     methods: {
 
+
         buttonStyle(clicked, available) {
             return {
                 'px-4 py-2 my-2 mr-2 rounded-full decoration-2 line-through text-gray-400 bg-gray-200 font-semibold text-sm align-center w-max cursor-pointer transition duration-200 ease whitespace-nowrap': !available,
@@ -116,6 +132,7 @@ export default {
 
         clickedOption: function (option_id, option_values_id) {
             this.product_options[option_id].option_values[option_values_id].clicked = !this.product_options[option_id].option_values[option_values_id].clicked;
+            this.selectedCategory = this.product_options[option_id].option_id;
 
             this.product_options[option_id].option_values.forEach((option, index) => {
                     if (index != option_values_id) {
@@ -127,12 +144,18 @@ export default {
             this.$forceUpdate();
         },
 
+
         changeQty: function (change, qty) {
-            var vm = this;
+
             if (!change) {
                 if (qty > 1) {
-                    vm.min_price = vm.product.min_price * (qty - 1);
-                    vm.max_price = vm.product.max_price * (qty - 1);
+
+                    if (this.price != null)
+                        this.price = this.price_per_qty * (qty - 1);
+                    else {
+                        this.min_price = this.product.min_price * (qty - 1);
+                        this.max_price = this.product.max_price * (qty - 1);
+                    }
 
                     return qty - 1;
                 } else
@@ -140,8 +163,13 @@ export default {
             }
 
             if (change) {
-                vm.min_price = vm.product.min_price * (qty + 1);
-                vm.max_price = vm.product.max_price * (qty + 1);
+                if (this.price != null)
+                    this.price = this.price_per_qty * (qty + 1);
+                else {
+                    this.min_price = this.product.min_price * (qty + 1);
+                    this.max_price = this.product.max_price * (qty + 1);
+                }
+
 
                 return qty + 1;
             }
@@ -151,6 +179,11 @@ export default {
             this.product_sku.forEach((sku, skuIndex) => {
                 this.mapping.push(JSON.parse(sku.sku_mapping))
             })
+        },
+
+        getAvailable: function (option_id, option_values_id) {
+            // console.log(this.product_options[option_id].option_values[option_values_id].available)
+            return !this.product_options[option_id].option_values[option_values_id].available;
         },
 
         checkAvailable: function () {
@@ -170,15 +203,26 @@ export default {
                 )
             })
 
+
             // Check mapping
-
             var score = 0;
+            var checkSameCategory = false;
 
+            this.product_options.forEach((category, optionIndex) => {
+                console.log(this.selectedCategory);
+
+                if (category.option_id != this.selectedCategory) {
+                    // console.log(category.option_id);
+
+                    category.option_values.forEach((options, valueIndex) => {
+                        options.available = false;
+                    })
+                }
+            })
 
             this.mapping.forEach((map, mapIndex) => {
 
-                // (map);
-
+                //Retrieve list of mapping according to selected button
                 map.forEach((mapOption, mapOptionIndex) => {
                     // (mapOption);
                     this.clickedOptions.forEach((option, catIndex) => {
@@ -190,40 +234,54 @@ export default {
                 })
 
 
+                //Change button style & state if it was in list of mapping
                 if (score == this.clickedOptions.length || this.clickedOptions.length == 0) {
-                //
-                //     ( map);
-                //
-                    this.product_options.forEach((category, optionIndex) => {
-                            category.option_values.forEach((options, valueIndex) => {
-                                options.available = true;
-                            })
-                    })
 
-                    map.forEach((button) => {
-                        this.$refs['optionButton'][button.option_value_id].available = false;
+                    this.product_options.forEach((category, catIndex) => {
+                            category.option_values.forEach((options, optionIndex) => {
+                                    map.forEach((mapOption) => {
 
-                        // (button)
-                        // this.product_options.forEach((category, optionIndex) => {
-                        //     category.option_values.forEach((options, valueIndex) => {
-                        //         (options.option_value_name + ' status: ' + (button.option_id == category.option_id  && button.option_value_id == options.option_value_id));
-                        //         if(button.option_id == category.option_id  && button.option_value_id == options.option_value_id)
-                        //         {
-                        //             this.product_options[optionIndex].option_values[valueIndex].available = false;
-                        //         }
-                        //
-                        //     })
-                        // })
-                        ('---------------------');
+                                            //enable mapped options
+                                            if (mapOption.option_value_id == options.option_value_id) {
+                                                // console.log(category);
+                                                options.available = true;
+                                            }
+                                        }
+                                    )
+                                }
+                            )
                         }
                     )
 
-                    // ('---------------');
+                    // Load image, price and stock if all option is selected
+                    if (this.clickedOptions.length == this.product_options.length) {
+                        this.price = this.product_sku[mapIndex].price * this.qty;
+                        this.price_per_qty = this.product_sku[mapIndex].price;
+                        this.img = this.product_sku[mapIndex].sku_img;
+
+                        if (this.product_sku[mapIndex].inventory >= this.qty)
+                            this.stock = true;
+                        else this.stock = false;
+
+                        console.log(this.stock);
+
+                    } else {
+                        this.min_price = this.product.min_price * this.qty;
+                        this.max_price = this.product.max_price * this.qty;
+                        this.price = null;
+                    }
+
                 }
-                this.$forceUpdate();
 
                 score = 0;
             })
+
+        },
+
+        getImage: function () {
+
+
+            return "https://orderhk.pokeguide.com/storage/img/goods/4/9332010275ffe76d5bdb046.02877134.jpeg";
         }
     },
 }

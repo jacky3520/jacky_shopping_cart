@@ -5324,6 +5324,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "SelectOption",
   props: ['product', 'product_sku'],
@@ -5335,7 +5344,12 @@ __webpack_require__.r(__webpack_exports__);
       product_options: [],
       qty: 1,
       mapping: [],
-      clickedOptions: []
+      clickedOptions: [],
+      selectedCategory: null,
+      price: null,
+      price_per_qty: null,
+      img: null,
+      stock: true
     };
   },
   mounted: function mounted() {
@@ -5347,6 +5361,7 @@ __webpack_require__.r(__webpack_exports__);
       _this.max_price = response.data.max_price;
     }), axios.get('/api/product_sku').then(function (response) {
       _this.product_sku = response.data;
+      _this.img = _this.product_sku[0].sku_img;
 
       _this.createMap();
     }), axios.get('/api/product_options').then(function (response) {
@@ -5376,6 +5391,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       this.product_options[option_id].option_values[option_values_id].clicked = !this.product_options[option_id].option_values[option_values_id].clicked;
+      this.selectedCategory = this.product_options[option_id].option_id;
       this.product_options[option_id].option_values.forEach(function (option, index) {
         if (index != option_values_id) {
           _this2.product_options[option_id].option_values[index].clicked = false;
@@ -5385,19 +5401,21 @@ __webpack_require__.r(__webpack_exports__);
       this.$forceUpdate();
     },
     changeQty: function changeQty(change, qty) {
-      var vm = this;
-
       if (!change) {
         if (qty > 1) {
-          vm.min_price = vm.product.min_price * (qty - 1);
-          vm.max_price = vm.product.max_price * (qty - 1);
+          if (this.price != null) this.price = this.price_per_qty * (qty - 1);else {
+            this.min_price = this.product.min_price * (qty - 1);
+            this.max_price = this.product.max_price * (qty - 1);
+          }
           return qty - 1;
         } else return 1;
       }
 
       if (change) {
-        vm.min_price = vm.product.min_price * (qty + 1);
-        vm.max_price = vm.product.max_price * (qty + 1);
+        if (this.price != null) this.price = this.price_per_qty * (qty + 1);else {
+          this.min_price = this.product.min_price * (qty + 1);
+          this.max_price = this.product.max_price * (qty + 1);
+        }
         return qty + 1;
       }
     },
@@ -5407,6 +5425,10 @@ __webpack_require__.r(__webpack_exports__);
       this.product_sku.forEach(function (sku, skuIndex) {
         _this3.mapping.push(JSON.parse(sku.sku_mapping));
       });
+    },
+    getAvailable: function getAvailable(option_id, option_values_id) {
+      // console.log(this.product_options[option_id].option_values[option_values_id].available)
+      return !this.product_options[option_id].option_values[option_values_id].available;
     },
     checkAvailable: function checkAvailable() {
       var _this4 = this;
@@ -5430,8 +5452,19 @@ __webpack_require__.r(__webpack_exports__);
       }); // Check mapping
 
       var score = 0;
+      var checkSameCategory = false;
+      this.product_options.forEach(function (category, optionIndex) {
+        console.log(_this4.selectedCategory);
+
+        if (category.option_id != _this4.selectedCategory) {
+          // console.log(category.option_id);
+          category.option_values.forEach(function (options, valueIndex) {
+            options.available = false;
+          });
+        }
+      });
       this.mapping.forEach(function (map, mapIndex) {
-        // (map);
+        //Retrieve list of mapping according to selected button
         map.forEach(function (mapOption, mapOptionIndex) {
           // (mapOption);
           _this4.clickedOptions.forEach(function (option, catIndex) {
@@ -5439,39 +5472,40 @@ __webpack_require__.r(__webpack_exports__);
               score++;
             }
           });
-        });
+        }); //Change button style & state if it was in list of mapping
 
         if (score == _this4.clickedOptions.length || _this4.clickedOptions.length == 0) {
-          //
-          //     ( map);
-          //
-          _this4.product_options.forEach(function (category, optionIndex) {
-            category.option_values.forEach(function (options, valueIndex) {
-              options.available = true;
+          _this4.product_options.forEach(function (category, catIndex) {
+            category.option_values.forEach(function (options, optionIndex) {
+              map.forEach(function (mapOption) {
+                //enable mapped options
+                if (mapOption.option_value_id == options.option_value_id) {
+                  // console.log(category);
+                  options.available = true;
+                }
+              });
             });
-          });
+          }); // Load image, price and stock if all option is selected
 
-          map.forEach(function (button) {
-            _this4.$refs['optionButton'][button.option_value_id].available = false; // (button)
-            // this.product_options.forEach((category, optionIndex) => {
-            //     category.option_values.forEach((options, valueIndex) => {
-            //         (options.option_value_name + ' status: ' + (button.option_id == category.option_id  && button.option_value_id == options.option_value_id));
-            //         if(button.option_id == category.option_id  && button.option_value_id == options.option_value_id)
-            //         {
-            //             this.product_options[optionIndex].option_values[valueIndex].available = false;
-            //         }
-            //
-            //     })
-            // })
 
-            '---------------------';
-          }); // ('---------------');
+          if (_this4.clickedOptions.length == _this4.product_options.length) {
+            _this4.price = _this4.product_sku[mapIndex].price * _this4.qty;
+            _this4.price_per_qty = _this4.product_sku[mapIndex].price;
+            _this4.img = _this4.product_sku[mapIndex].sku_img;
+            if (_this4.product_sku[mapIndex].inventory >= _this4.qty) _this4.stock = true;else _this4.stock = false;
+            console.log(_this4.stock);
+          } else {
+            _this4.min_price = _this4.product.min_price * _this4.qty;
+            _this4.max_price = _this4.product.max_price * _this4.qty;
+            _this4.price = null;
+          }
         }
-
-        _this4.$forceUpdate();
 
         score = 0;
       });
+    },
+    getImage: function getImage() {
+      return "https://orderhk.pokeguide.com/storage/img/goods/4/9332010275ffe76d5bdb046.02877134.jpeg";
     }
   }
 });
@@ -28109,7 +28143,7 @@ var render = function () {
         _c("div", { staticClass: "flex mx-4 mt-4" }, [
           _c("img", {
             staticClass: "rounded-md w-32 h-32 md:w-52 md:h-52",
-            attrs: { src: "" },
+            attrs: { src: _vm.img },
           }),
           _vm._v(" "),
           _c("div", { staticClass: "flex-grow" }, [
@@ -28133,13 +28167,23 @@ var render = function () {
                     "text-3xl md:text-5xl  mt-5 float-end text-yellow-500",
                 },
                 [
-                  _vm._v(
-                    "\n                        HK$" +
-                      _vm._s(_vm.min_price) +
-                      " ~\n                        HK$" +
-                      _vm._s(_vm.max_price) +
-                      "\n\n                    "
-                  ),
+                  _vm.price == null
+                    ? _c("div", [
+                        _vm._v(
+                          "\n                            HK$" +
+                            _vm._s(_vm.min_price) +
+                            " ~\n                            HK$" +
+                            _vm._s(_vm.max_price) +
+                            "\n                        "
+                        ),
+                      ])
+                    : _c("div", [
+                        _vm._v(
+                          "\n                            HK$" +
+                            _vm._s(_vm.price) +
+                            "\n                        "
+                        ),
+                      ]),
                 ]
               ),
             ]),
@@ -28212,6 +28256,7 @@ var render = function () {
                     ref: "optionButton" + values.option_value_id,
                     refInFor: true,
                     class: _vm.buttonStyle(values.clicked, values.available),
+                    attrs: { disabled: _vm.getAvailable(catIndex, valIndex) },
                     on: {
                       click: function ($event) {
                         ;[_vm.clickedOption(catIndex, valIndex)]
@@ -28224,6 +28269,8 @@ var render = function () {
                         _vm._s(values.option_value_name) +
                         " - " +
                         _vm._s(values.option_value_id) +
+                        " - " +
+                        _vm._s(values.available) +
                         "\n\n                "
                     ),
                   ]
