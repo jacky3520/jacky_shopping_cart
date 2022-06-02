@@ -5320,15 +5320,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "SelectOption",
-  props: ['product', 'product_sku', 'product_options'],
+  props: ['product', 'product_sku'],
   data: function data() {
     return {
       product_name: null,
       min_price: null,
       max_price: null,
-      product_options: []
+      product_options: [],
+      qty: 1,
+      mapping: [],
+      clickedOptions: []
     };
   },
   mounted: function mounted() {
@@ -5336,23 +5343,137 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.post('/api/fetch').then(axios.get('/api/product').then(function (response) {
       _this.product = response.data;
+      _this.min_price = response.data.min_price;
+      _this.max_price = response.data.max_price;
     }), axios.get('/api/product_sku').then(function (response) {
       _this.product_sku = response.data;
+
+      _this.createMap();
     }), axios.get('/api/product_options').then(function (response) {
       _this.product_options = response.data;
-    }))["catch"](function (err) {
-      console.log(err);
+
+      _this.product_options.forEach(function (category, catIndex) {
+        category.option_values.forEach(function (options, optionIndex) {
+          return options = Object.assign(options, {
+            clicked: false,
+            available: true
+          });
+        });
+      });
+    }), this.checkAvailable())["catch"](function (err) {
+      err;
     });
   },
   methods: {
-    checkAvailable: function checkAvailable($option_id, $option_value_id) {
-      alert($option_value_id);
-    }
-  } //
-  // created: function(){
-  //     this.getOptions()
-  // }
+    buttonStyle: function buttonStyle(clicked, available) {
+      return {
+        'px-4 py-2 my-2 mr-2 rounded-full decoration-2 line-through text-gray-400 bg-gray-200 font-semibold text-sm align-center w-max cursor-pointer transition duration-200 ease whitespace-nowrap': !available,
+        'px-4 py-2 my-2 mr-2 rounded-full bg-gray-200 bg-gray-200 font-semibold text-sm align-center w-max cursor-pointer transition duration-200 ease whitespace-nowrap': !clicked,
+        'px-4 py-2 my-2 mr-2 rounded-full text-yellow-500 bg-amber-100 font-semibold text-sm align-center w-max cursor-pointer transition duration-200 ease whitespace-nowrap': clicked
+      };
+    },
+    clickedOption: function clickedOption(option_id, option_values_id) {
+      var _this2 = this;
 
+      this.product_options[option_id].option_values[option_values_id].clicked = !this.product_options[option_id].option_values[option_values_id].clicked;
+      this.product_options[option_id].option_values.forEach(function (option, index) {
+        if (index != option_values_id) {
+          _this2.product_options[option_id].option_values[index].clicked = false;
+        }
+      });
+      this.checkAvailable();
+      this.$forceUpdate();
+    },
+    changeQty: function changeQty(change, qty) {
+      var vm = this;
+
+      if (!change) {
+        if (qty > 1) {
+          vm.min_price = vm.product.min_price * (qty - 1);
+          vm.max_price = vm.product.max_price * (qty - 1);
+          return qty - 1;
+        } else return 1;
+      }
+
+      if (change) {
+        vm.min_price = vm.product.min_price * (qty + 1);
+        vm.max_price = vm.product.max_price * (qty + 1);
+        return qty + 1;
+      }
+    },
+    createMap: function createMap() {
+      var _this3 = this;
+
+      this.product_sku.forEach(function (sku, skuIndex) {
+        _this3.mapping.push(JSON.parse(sku.sku_mapping));
+      });
+    },
+    checkAvailable: function checkAvailable() {
+      var _this4 = this;
+
+      var option_id;
+      var value_id;
+      this.clickedOptions = []; // Get clicked options
+
+      this.product_options.forEach(function (category, optionIndex) {
+        category.option_values.forEach(function (options, valueIndex) {
+          if (options.clicked) {
+            option_id = category.option_id;
+            value_id = options.option_value_id;
+
+            _this4.clickedOptions.push({
+              option_id: option_id,
+              value_id: value_id
+            });
+          }
+        });
+      }); // Check mapping
+
+      var score = 0;
+      this.mapping.forEach(function (map, mapIndex) {
+        // (map);
+        map.forEach(function (mapOption, mapOptionIndex) {
+          // (mapOption);
+          _this4.clickedOptions.forEach(function (option, catIndex) {
+            if (mapOption.option_id == option.option_id && mapOption.option_value_id == option.value_id) {
+              score++;
+            }
+          });
+        });
+
+        if (score == _this4.clickedOptions.length || _this4.clickedOptions.length == 0) {
+          //
+          //     ( map);
+          //
+          _this4.product_options.forEach(function (category, optionIndex) {
+            category.option_values.forEach(function (options, valueIndex) {
+              options.available = true;
+            });
+          });
+
+          map.forEach(function (button) {
+            _this4.$refs['optionButton'][button.option_value_id].available = false; // (button)
+            // this.product_options.forEach((category, optionIndex) => {
+            //     category.option_values.forEach((options, valueIndex) => {
+            //         (options.option_value_name + ' status: ' + (button.option_id == category.option_id  && button.option_value_id == options.option_value_id));
+            //         if(button.option_id == category.option_id  && button.option_value_id == options.option_value_id)
+            //         {
+            //             this.product_options[optionIndex].option_values[valueIndex].available = false;
+            //         }
+            //
+            //     })
+            // })
+
+            '---------------------';
+          }); // ('---------------');
+        }
+
+        _this4.$forceUpdate();
+
+        score = 0;
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -27988,9 +28109,7 @@ var render = function () {
         _c("div", { staticClass: "flex mx-4 mt-4" }, [
           _c("img", {
             staticClass: "rounded-md w-32 h-32 md:w-52 md:h-52",
-            attrs: {
-              src: "https://orderhk.pokeguide.com/storage/img/goods/4/9332010275ffe76d5bdb046.02877134.jpeg",
-            },
+            attrs: { src: "" },
           }),
           _vm._v(" "),
           _c("div", { staticClass: "flex-grow" }, [
@@ -28000,9 +28119,9 @@ var render = function () {
                 { staticClass: "flex-grow text-2xl md:text-4xl mx-4 mt-4" },
                 [
                   _vm._v(
-                    "\n                            " +
+                    "\n                        " +
                       _vm._s(_vm.product.product_name) +
-                      "\n                        "
+                      "\n                    "
                   ),
                 ]
               ),
@@ -28015,11 +28134,11 @@ var render = function () {
                 },
                 [
                   _vm._v(
-                    "\n                            HK$" +
-                      _vm._s(_vm.product.min_price) +
-                      " ~\n                            HK$" +
-                      _vm._s(_vm.product.max_price) +
-                      "\n                        "
+                    "\n                        HK$" +
+                      _vm._s(_vm.min_price) +
+                      " ~\n                        HK$" +
+                      _vm._s(_vm.max_price) +
+                      "\n\n                    "
                   ),
                 ]
               ),
@@ -28027,43 +28146,85 @@ var render = function () {
           ]),
         ]),
         _vm._v(" "),
-        _vm._m(0),
+        _c("div", { staticClass: "flex mx-4" }, [
+          _c("div", { staticClass: "text-2xl" }, [
+            _vm._v("\n                Quantity\n            "),
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex-grow " }, [
+            _c(
+              "div",
+              { staticClass: "flex space-x-6 float-end align-middle" },
+              [
+                _c(
+                  "div",
+                  {
+                    staticClass: "text-2xl hover:cursor-pointer",
+                    on: {
+                      click: function ($event) {
+                        _vm.qty = _vm.changeQty(0, _vm.qty)
+                      },
+                    },
+                  },
+                  [_vm._v("-")]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "text-2xl " }, [
+                  _vm._v(_vm._s(_vm.qty)),
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "text-2xl hover:cursor-pointer text-yellow-500",
+                    on: {
+                      click: function ($event) {
+                        _vm.qty = _vm.changeQty(1, _vm.qty)
+                      },
+                    },
+                  },
+                  [_vm._v("+\n                    ")]
+                ),
+              ]
+            ),
+          ]),
+        ]),
         _vm._v(" "),
-        _vm._l(_vm.product_options, function (category) {
+        _vm._l(_vm.product_options, function (category, catIndex) {
           return _c("div", { staticClass: "flex flex-col mx-4" }, [
             _c("div", { staticClass: "text-2xl" }, [
               _vm._v(
-                "\n                    " +
+                "\n                " +
                   _vm._s(category.option_name) +
-                  "\n                "
+                  "\n            "
               ),
             ]),
             _vm._v(" "),
             _c(
               "div",
               { staticClass: "flex flex-wrap mt-3" },
-              _vm._l(category.option_values, function (values) {
+              _vm._l(category.option_values, function (values, valIndex) {
                 return _c(
-                  "span",
+                  "button",
                   {
-                    staticClass:
-                      "px-4 py-2 my-2 mr-2 rounded-full text-gray-500 bg-gray-200 font-semibold text-sm align-center w-max cursor-pointer transition duration-300 ease whitespace-nowrap\t",
+                    key: values.option_value_id,
+                    ref: "optionButton" + values.option_value_id,
+                    refInFor: true,
+                    class: _vm.buttonStyle(values.clicked, values.available),
                     on: {
                       click: function ($event) {
-                        return _vm.checkAvailable(
-                          category.option_id,
-                          values.option_value_id
-                        )
+                        ;[_vm.clickedOption(catIndex, valIndex)]
                       },
                     },
                   },
                   [
                     _vm._v(
-                      "\n                        " +
+                      "\n\n                    " +
                         _vm._s(values.option_value_name) +
                         " - " +
                         _vm._s(values.option_value_id) +
-                        "\n                    "
+                        "\n\n                "
                     ),
                   ]
                 )
@@ -28077,34 +28238,7 @@ var render = function () {
     ),
   ])
 }
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "flex mx-4" }, [
-      _c("div", { staticClass: "text-2xl" }, [
-        _vm._v("\n                    Quantity\n                "),
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "flex-grow " }, [
-        _c("div", { staticClass: "flex space-x-6 float-end align-middle" }, [
-          _c("div", { staticClass: "text-2xl hover:cursor-pointer" }, [
-            _vm._v("-"),
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "text-2xl " }, [_vm._v("1")]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "text-2xl hover:cursor-pointer text-yellow-500" },
-            [_vm._v("+")]
-          ),
-        ]),
-      ]),
-    ])
-  },
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
